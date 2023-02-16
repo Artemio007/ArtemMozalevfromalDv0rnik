@@ -1,3 +1,4 @@
+import threading
 from threading import Lock, Thread
 from time import sleep
 
@@ -9,18 +10,20 @@ class Bank:
         self.lock = Lock()
 
     def replenish(self, s=10):
+
         print(self.money, 'money:', self.name)
         self.money += s
         print('Replenish cash:', self.name)
 
     def withdraw(self, s=10):
+
         print(self.money, 'money:', self.name)
         sleep(1)
         self.money -= s
         print('Withdraw cash:', self.name)
 
     def transfer(self, friend_bank, s=10):
-        with (self.lock, friend_bank.lock):
+        with (self.lock):
             print('Lock myself: ', self.name)
             self.withdraw(s)
             print('Lock friend: ', friend_bank.name)
@@ -51,6 +54,8 @@ user3 = User('Ann', bank3, bank2)
 user1.start()
 user2.start()
 user3.start()
+
+print(threading.enumerate())
 
 user1.join()
 user2.join()
